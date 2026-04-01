@@ -16,6 +16,8 @@ import { createLLMProvider } from './lib/llm/index.mjs';
 import { generateLLMIdeas } from './lib/llm/ideas.mjs';
 import { TelegramAlerter } from './lib/alerts/telegram.mjs';
 import { DiscordAlerter } from './lib/alerts/discord.mjs';
+import { generateGravityReport } from './lib/ai/oracle.mjs';
+import { WebhookExecutor } from './lib/alerts/webhook.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = __dirname;
@@ -42,6 +44,7 @@ const memory = new MemoryManager(RUNS_DIR);
 const llmProvider = createLLMProvider(config.llm);
 const telegramAlerter = new TelegramAlerter(config.telegram);
 const discordAlerter = new DiscordAlerter(config.discord || {});
+const webhookExecutor = new WebhookExecutor(config.webhooks || {});
 
 if (llmProvider) console.log(`[Crucix] LLM enabled: ${llmProvider.name} (${llmProvider.model})`);
 if (telegramAlerter.isConfigured) {
@@ -360,6 +363,27 @@ async function runSweepCycle() {
     } else {
       synthesized.ideas = [];
       synthesized.ideasSource = 'disabled';
+    }
+
+    // 5.5. AI Analysis Node -> Gravity Report
+    if (llmProvider?.isConfigured) {
+      try {
+        console.log('[Antigravity] The Oracle is computing Systemic Gravity Score...');
+        const gravityReport = await generateGravityReport(llmProvider, synthesized, delta);
+        if (gravityReport) {
+          synthesized.gravityScore = gravityReport.gravityScore;
+          synthesized.gravityRationale = gravityReport.rationale || '';
+          synthesized.criticalSectors = gravityReport.criticalSectors || [];
+          synthesized.evasiveActions = gravityReport.evasiveActions || [];
+          console.log(`[Antigravity] Gravity Score: ${gravityReport.gravityScore}/100`);
+
+          if (gravityReport.evasiveActions.length > 0 && webhookExecutor.isConfigured) {
+            await webhookExecutor.executeActions(gravityReport);
+          }
+        }
+      } catch (oracleErr) {
+        console.error('[Oracle] Gravity generation failed:', oracleErr.message);
+      }
     }
 
     // 6. Alert evaluation — Telegram + Discord (LLM with rule-based fallback, multi-tier, semantic dedup)
