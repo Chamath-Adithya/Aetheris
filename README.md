@@ -6,7 +6,8 @@
 
 ## [Forked from Crucix](https://github.com/calesthio/Crucix)
 
-[![Live Website](https://img.shields.io/badge/live-crucix.live-00d4ff?style=for-the-badge)](https://www.crucix.live/)
+[![Live Website](https://img.shields.io/badge/live
+-crucix.live-00d4ff?style=for-the-badge)](https://www.crucix.live/)
 [![Open Demo](https://img.shields.io/badge/open-live%20dashboard-0b1220?style=for-the-badge&logo=googlechrome&logoColor=white)](https://www.crucix.live/)
 
 [![Node.js 22+](https://img.shields.io/badge/node-22%2B-brightgreen)](#quick-start)
