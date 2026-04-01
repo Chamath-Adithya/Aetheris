@@ -1,8 +1,8 @@
 <div align="center">
 
-# Crucix
+# Aetheris: The Antigravity Agent
 
-**Your own intelligence terminal. 27 sources. One command. Zero cloud.**
+**Your autonomous intelligence and system immunity protocol.**
 
 ## [Visit The Live Site: crucix.live](https://www.crucix.live/)
 
@@ -37,14 +37,14 @@
 
 </div>
 
-> **Live website:** [https://www.crucix.live/](https://www.crucix.live/)
-> Explore the public demo first, then clone the repo to run Crucix locally.
+> **Note:** Aetheris is a powerful, active-agent fork of the original Crucix repository.
+> While Crucix is a passive dashboard, Aetheris is an active system immunity engine.
 
-Crucix pulls satellite fire detection, flight tracking, radiation monitoring, satellite constellation tracking, economic indicators, live market prices, conflict data, sanctions lists, and social sentiment from 27 open-source intelligence feeds — in parallel, every 15 minutes — and renders everything on a single self-contained Jarvis-style dashboard.
+Aetheris pulls satellite fire detection, flight tracking, radiation monitoring, economic indicators, conflict data, and social sentiment from 27 OSINT feeds. It correlates these streams using an advanced **AI Analysis Node**.
 
-Hook it up to an LLM and it becomes a **two-way intelligence assistant** — pushing multi-tier alerts to Telegram and Discord when something meaningful changes, responding to commands like `/brief` and `/sweep` from your phone, and generating actionable trade ideas grounded in real cross-domain data. Your own analyst that watches the world while you sleep.
+Instead of merely alerting users that a crisis has occurred, Aetheris uses AI to predict the ripple effects before they happen, outputting **Gravity Scores** and triggering automated actions via **Webhook Triggers** to protect your operations. Built to be resilient, it incorporates a self-healing loop for continuous operation.
 
-Try the live demo first at [https://www.crucix.live/](https://www.crucix.live/), then clone the repo when you want the full local stack.
+Try the live demo of the base original project first at [https://www.crucix.live/](https://www.crucix.live/), then clone this repo when you want the full active Aetheris stack.
 
 No cloud. No telemetry. No subscriptions. Just `node server.mjs` and you're running.
 
@@ -57,13 +57,15 @@ No cloud. No telemetry. No subscriptions. Just `node server.mjs` and you're runn
 
 ---
 
-## Why This Exists
+## The Antigravity Protocol
 
-Most of the world's real-time intelligence — satellite imagery, radiation levels, conflict events, economic indicators, flight tracking, maritime activity — is publicly available. It's just scattered across dozens of government APIs, research institutions, and open data feeds that nobody has time to check individually.
+In complex systems engineering, "gravity" represents the inevitable pull towards failure caused by external global events. Aetheris executes "antigravity measures" to ensure fail-safe operations.
 
-Crucix brings it all into one place. Not behind a paywall, not locked in an enterprise platform, not requiring a security clearance. Just open data, aggregated and cross-correlated on your own machine, updated every 15 minutes.
+**Examples:**
+- **Logistics Immunity:** Correlates extreme weather and flight reroutes to predict supply chain delays, autonomously triggering API webhooks to reroute logistics.
+- **Financial Safeguards:** Matches geopolitical conflicts with market data to execute automated trading safeguards.
 
-It was built for anyone who wants to understand what's actually happening in the world right now — researchers, journalists, traders, OSINT analysts, or just curious people who believe access to information shouldn't depend on your budget.
+Most of the world's real-time intelligence is public but scattered. Aetheris aggregates it, correlates the hidden ripples, and acts autonomously.
 
 ---
 
