@@ -39,8 +39,8 @@ try {
 
 // Step 4: Check each local module
 const modules = [
-  ['./crucix.config.mjs', 'config'],
-  ['./apis/utils/env.mjs', 'env loader'],
+  ['./aetheris.config.mjs', 'config'],
+  ['./lib/llm/index.mjs', 'LLM Provider Factory'],
   ['./lib/delta/engine.mjs', 'delta engine'],
   ['./lib/delta/memory.mjs', 'memory manager'],
   ['./lib/delta/index.mjs', 'delta index'],

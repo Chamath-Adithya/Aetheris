@@ -4,7 +4,7 @@
 
 **Your autonomous intelligence and system immunity protocol.**
 
-## [Visit The Live Site: crucix.live](https://www.crucix.live/)
+## [Forked from Crucix](https://github.com/calesthio/Crucix)
 
 [![Live Website](https://img.shields.io/badge/live-crucix.live-00d4ff?style=for-the-badge)](https://www.crucix.live/)
 [![Open Demo](https://img.shields.io/badge/open-live%20dashboard-0b1220?style=for-the-badge&logo=googlechrome&logoColor=white)](https://www.crucix.live/)
@@ -37,16 +37,23 @@
 
 </div>
 
-> **Note:** Aetheris is a powerful, active-agent fork of the original Crucix repository.
-> While Crucix is a passive dashboard, Aetheris is an active system immunity engine.
+> **Aetheris: The Antigravity Agent** 
+> *Built for resilience. Designed in silence.*
 
-Aetheris pulls satellite fire detection, flight tracking, radiation monitoring, economic indicators, conflict data, and social sentiment from 27 OSINT feeds. It correlates these streams using an advanced **AI Analysis Node**.
+Aetheris is an advanced, specialized fork of the Crucix intelligence dashboard. We are transitioning the project from a passive data observation tool into an active, predictive intelligence and system immunity engine.
 
-Instead of merely alerting users that a crisis has occurred, Aetheris uses AI to predict the ripple effects before they happen, outputting **Gravity Scores** and triggering automated actions via **Webhook Triggers** to protect your operations. Built to be resilient, it incorporates a self-healing loop for continuous operation.
+**The Antigravity Protocol:** Instead of merely alerting users that a crisis has occurred, Aetheris uses AI to correlate global data streams in real-time from 27 OSINT sources to predict ripple effects before they happen, and execute automated preventative measures (webhook triggers, portfolio safeguards, supply chain rerouting).
 
-Try the live demo of the base original project first at [https://www.crucix.live/](https://www.crucix.live/), then clone this repo when you want the full active Aetheris stack.
+## The Roadmap
 
-No cloud. No telemetry. No subscriptions. Just `node server.mjs` and you're running.
+- **AI Analysis Node:** An active layer between raw APIs and notification engines for predictive correlation.
+- **Predictive Risk Dashboard:** Upgraded UI displaying real-time "Gravity Scores".
+- **Webhook Triggers:** Expanding simple alerts into automated API actions against external systems (AWS, ERPs).
+- **Self-Healing (Project Lazarus):** Core state loops preventing crash cascades.
+
+For full details on the Aetheris vision, see the `Temp-Docs/` folder.
+
+**Original Engine:** No cloud. No telemetry. No subscriptions. Just `node server.mjs` and you're running.
 
 ## Token / Asset Warning
 
@@ -278,7 +285,7 @@ Crucix still works with zero API keys. 18+ sources require no authentication at 
 ```
 crucix/
 ├── server.mjs                 # Express dev server (SSE, auto-refresh, LLM, bot commands)
-├── crucix.config.mjs          # Configuration with env var overrides + delta thresholds
+├── aetheris.config.mjs        # Configuration with env var overrides + delta thresholds
 ├── diag.mjs                   # Diagnostic script — run if server fails to start
 ├── .env.example               # All documented env vars
 ├── package.json               # Runtime: express | Optional: discord.js
@@ -428,7 +435,7 @@ All settings are in `.env` with sensible defaults:
 | `DISCORD_GUILD_ID` | — | Server ID (instant slash command registration) |
 | `DISCORD_WEBHOOK_URL` | — | Webhook URL (alert-only fallback, no bot needed) |
 
-Delta engine thresholds (how sensitive the system is to changes between sweeps) can be customized in `crucix.config.mjs` under the `delta.thresholds` section. The defaults are tuned to filter out noise while catching meaningful moves.
+Delta engine thresholds (how sensitive the system is to changes between sweeps) can be customized in `aetheris.config.mjs` under the `delta.thresholds` section. The defaults are tuned to filter out noise while catching meaningful moves.
 
 ---
 
