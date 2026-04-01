@@ -11,7 +11,7 @@ import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
 import config from '../veritas.config.mjs';
 import { createLLMProvider } from '../lib/llm/index.mjs';
-import { generateLLMIdeas } from '../lib/llm/ideas.mjs';
+import { evaluateReality } from '../lib/ai/veritas.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -256,146 +256,7 @@ export async function fetchAllNews() {
   return selected.slice(0, 50);
 }
 
-// === Leverageable Ideas from Signals ===
-export function generateIdeas(V2) {
-  const ideas = [];
-  const vix = V2.fred.find(f => f.id === 'VIXCLS');
-  const hy = V2.fred.find(f => f.id === 'BAMLH0A0HYM2');
-  const spread = V2.fred.find(f => f.id === 'T10Y2Y');
-
-  if (V2.tg.urgent.length > 3 && V2.energy.wti > 68) {
-    ideas.push({
-      title: 'Conflict-Energy Nexus Active',
-      text: `${V2.tg.urgent.length} urgent conflict signals with WTI at $${V2.energy.wti}. Geopolitical risk premium may expand. Consider energy exposure.`,
-      type: 'long', confidence: 'Medium', horizon: 'swing'
-    });
-  }
-  if (vix && vix.value > 20) {
-    ideas.push({
-      title: 'Elevated Volatility Regime',
-      text: `VIX at ${vix.value} — fear premium elevated. Portfolio hedges justified. Short-term equity upside is capped.`,
-      type: 'hedge', confidence: vix.value > 25 ? 'High' : 'Medium', horizon: 'tactical'
-    });
-  }
-  if (vix && vix.value > 20 && hy && hy.value > 3) {
-    ideas.push({
-      title: 'Safe Haven Demand Rising',
-      text: `VIX ${vix.value} + HY spread ${hy.value}% = risk-off building. Gold, treasuries, quality dividends may outperform.`,
-      type: 'hedge', confidence: 'Medium', horizon: 'tactical'
-    });
-  }
-  if (V2.energy.wtiRecent.length > 1) {
-    const latest = V2.energy.wtiRecent[0];
-    const oldest = V2.energy.wtiRecent[V2.energy.wtiRecent.length - 1];
-    const pct = ((latest - oldest) / oldest * 100).toFixed(1);
-    if (Math.abs(pct) > 3) {
-      ideas.push({
-        title: pct > 0 ? 'Oil Momentum Building' : 'Oil Under Pressure',
-        text: `WTI moved ${pct > 0 ? '+' : ''}${pct}% recently to $${V2.energy.wti}/bbl. ${pct > 0 ? 'Energy and commodity names benefit.' : 'Demand concerns may be emerging.'}`,
-        type: pct > 0 ? 'long' : 'watch', confidence: 'Medium', horizon: 'swing'
-      });
-    }
-  }
-  if (spread) {
-    ideas.push({
-      title: spread.value > 0 ? 'Yield Curve Normalizing' : 'Yield Curve Inverted',
-      text: `10Y-2Y spread at ${spread.value.toFixed(2)}. ${spread.value > 0 ? 'Recession signal fading — cyclical rotation possible.' : 'Inversion persists — defensive positioning warranted.'}`,
-      type: 'watch', confidence: 'Medium', horizon: 'strategic'
-    });
-  }
-  const debt = parseFloat(V2.treasury.totalDebt);
-  if (debt > 35e12) {
-    ideas.push({
-      title: 'Fiscal Trajectory Supports Hard Assets',
-      text: `National debt at $${(debt / 1e12).toFixed(1)}T. Long-term gold, bitcoin, and real asset appreciation thesis intact.`,
-      type: 'long', confidence: 'High', horizon: 'strategic'
-    });
-  }
-  const totalThermal = V2.thermal.reduce((s, t) => s + t.det, 0);
-  if (totalThermal > 30000 && V2.tg.urgent.length > 2) {
-    ideas.push({
-      title: 'Satellite Confirms Conflict Intensity',
-      text: `${totalThermal.toLocaleString()} thermal detections + ${V2.tg.urgent.length} urgent OSINT flags. Defense sector procurement may accelerate.`,
-      type: 'watch', confidence: 'Medium', horizon: 'swing'
-    });
-  }
-
-  // Yield Curve + Labor Interaction
-  const unemployment = V2.bls.find(b => b.id === 'LNS14000000' || b.id === 'UNRATE');
-  const payrolls = V2.bls.find(b => b.id === 'CES0000000001' || b.id === 'PAYEMS');
-  if (spread && unemployment && payrolls) {
-    const weakLabor = (unemployment.value > 4.3) || (payrolls.momChange && payrolls.momChange < -50);
-    if (spread.value > 0.3 && weakLabor) {
-      ideas.push({
-        title: 'Steepening Curve Meets Weak Labor',
-        text: `10Y-2Y at ${spread.value.toFixed(2)} + UE ${unemployment.value}%. Curve steepening with deteriorating employment = recession positioning warranted.`,
-        type: 'hedge', confidence: 'High', horizon: 'tactical'
-      });
-    }
-  }
-
-  // ACLED Conflict + Energy Momentum
-  const conflictEvents = V2.acled?.totalEvents || 0;
-  if (conflictEvents > 50 && V2.energy.wtiRecent.length > 1) {
-    const wtiMove = V2.energy.wtiRecent[0] - V2.energy.wtiRecent[V2.energy.wtiRecent.length - 1];
-    if (wtiMove > 2) {
-      ideas.push({
-        title: 'Conflict Fueling Energy Momentum',
-        text: `${conflictEvents} ACLED events this week + WTI up $${wtiMove.toFixed(1)}. Conflict-energy transmission channel active.`,
-        type: 'long', confidence: 'Medium', horizon: 'swing'
-      });
-    }
-  }
-
-  // Defense + Conflict Intensity
-  const totalFatalities = V2.acled?.totalFatalities || 0;
-  const totalThermalAll = V2.thermal.reduce((s, t) => s + t.det, 0);
-  if (totalFatalities > 500 && totalThermalAll > 20000) {
-    ideas.push({
-      title: 'Defense Procurement Acceleration Signal',
-      text: `${totalFatalities.toLocaleString()} conflict fatalities + ${totalThermalAll.toLocaleString()} thermal detections. Defense contractors may see accelerated procurement.`,
-      type: 'long', confidence: 'Medium', horizon: 'swing'
-    });
-  }
-
-  // HY Spread + VIX Divergence
-  if (hy && vix) {
-    const hyWide = hy.value > 3.5;
-    const vixLow = vix.value < 18;
-    const hyTight = hy.value < 2.5;
-    const vixHigh = vix.value > 25;
-    if (hyWide && vixLow) {
-      ideas.push({
-        title: 'Credit Stress Ignored by Equity Vol',
-        text: `HY spread ${hy.value.toFixed(1)}% (wide) but VIX only ${vix.value.toFixed(0)} (complacent). Equity may be underpricing credit deterioration.`,
-        type: 'watch', confidence: 'Medium', horizon: 'tactical'
-      });
-    } else if (hyTight && vixHigh) {
-      ideas.push({
-        title: 'Equity Fear Exceeds Credit Stress',
-        text: `VIX at ${vix.value.toFixed(0)} but HY spread only ${hy.value.toFixed(1)}%. Equity vol may be overshooting — credit markets aren't confirming.`,
-        type: 'watch', confidence: 'Medium', horizon: 'tactical'
-      });
-    }
-  }
-
-  // Supply Chain + Inflation Pipeline
-  const ppi = V2.bls.find(b => b.id === 'WPUFD49104' || b.id === 'PCU--PCU--');
-  const cpi = V2.bls.find(b => b.id === 'CUUR0000SA0' || b.id === 'CPIAUCSL');
-  if (ppi && cpi && V2.gscpi) {
-    const supplyPressure = V2.gscpi.value > 0.5;
-    const ppiRising = ppi.momChangePct > 0.3;
-    if (supplyPressure && ppiRising) {
-      ideas.push({
-        title: 'Inflation Pipeline Building Pressure',
-        text: `GSCPI at ${V2.gscpi.value.toFixed(2)} (${V2.gscpi.interpretation}) + PPI momentum +${ppi.momChangePct?.toFixed(1)}%. Input costs flowing through — CPI may follow.`,
-        type: 'long', confidence: 'Medium', horizon: 'strategic'
-      });
-    }
-  }
-
-  return ideas.slice(0, 8);
-}
+// Removed old generateIdeas function. Veritas Fact-Checker handles AI payloads natively now.
 
 // === Synthesize raw sweep data into dashboard format ===
 export async function synthesize(data) {
@@ -610,7 +471,7 @@ export async function synthesize(data) {
     tg: { posts: tgData.totalPosts || 0, urgent: tgUrgent, topPosts: tgTop },
     who, fred, energy, metals, bls, treasury, gscpi, defense, noaa, epa, acled, gdelt, space, health, news,
     markets, // Live Yahoo Finance market data
-    ideas: [], ideasSource: 'disabled',
+    realityReport: null,
     // newsFeed for ticker (merged RSS + GDELT + Telegram)
     newsFeed: buildNewsFeed(news, gdeltData, tgUrgent, tgTop),
   };
@@ -698,32 +559,23 @@ async function cliInject() {
 
   if (llmProvider?.isConfigured) {
     try {
-      console.log(`[LLM] Generating ideas via ${llmProvider.name}...`);
-      const llmIdeas = await generateLLMIdeas(llmProvider, V2, null, []);
-      if (llmIdeas?.length) {
-        V2.ideas = llmIdeas;
-        V2.ideasSource = 'llm';
-        console.log(`[LLM] Generated ${llmIdeas.length} ideas`);
+      console.log(`[Veritas] Generating Truth Proof via ${llmProvider.name}...`);
+      const realityReport = await evaluateReality(llmProvider, V2, null);
+      if (realityReport) {
+        V2.realityReport = realityReport;
+        console.log(`[Veritas] Truth Proof generated: Score ${realityReport.realityScore}`);
       } else {
-        V2.ideas = [];
-        V2.ideasSource = 'llm-failed';
-        console.log('[LLM] No ideas returned');
+        console.log('[Veritas] Truth Proof failed or skipped');
       }
     } catch (err) {
-      V2.ideas = [];
-      V2.ideasSource = 'llm-failed';
-      console.log('[LLM] Idea generation failed:', err.message);
+      console.log('[Veritas] Fact-check crashed:', err.message);
     }
-  } else {
-    V2.ideas = [];
-    V2.ideasSource = 'disabled';
   }
-  console.log(`Generated ${V2.ideas.length} leverageable ideas`);
 
   const json = JSON.stringify(V2);
   console.log('\n--- Synthesis ---');
   console.log('Size:', json.length, 'bytes | Air:', V2.air.length, '| Thermal:', V2.thermal.length,
-    '| News:', V2.news.length, '| Ideas:', V2.ideas.length, '| Sources:', V2.health.length);
+    '| News:', V2.news.length, '| Reality Report:', V2.realityReport ? 'YES' : 'NO', '| Sources:', V2.health.length);
 
   const htmlPath = htmlOverride || join(ROOT, 'dashboard/public/jarvis.html');
   let html = readFileSync(htmlPath, 'utf8');
