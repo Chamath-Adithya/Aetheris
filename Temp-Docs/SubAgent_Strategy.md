@@ -1,33 +1,31 @@
-# Sub-Agent Strategy: The Antigravity Ecosystem
+# Sub-Agent Strategy: The Veritas Ecosystem
 
-To handle the complexity of the Antigravity Protocol, the Aetheris core will orchestrate a set of specialized sub-agents. These active components share the workload, enabling the system to scale its analytical depth without slowing down the 15-minute global OSINT sweep cycle.
+To handle the complexity of the Fact-Checking Protocol, the Veritas core architecture orchestrates a set of specialized sub-agents. These active components share the workload, enabling the system to scale its analytical depth.
 
 ## Sub-Agent Roles
 
-### 1. Data Synthesizer Agent (The Observer)
-**Task:** Rapid classification and entity extraction.
-- Watches the raw `apis/sources/` streams.
-- Cleans and structures the data (e.g., mapping a raw GDELT event to a specific geographic entity and severity score).
-- Reduces the noise-to-signal ratio before data hits the primary correlation engine.
+### 1. The Sensor Agents (The Physical Sweepers)
+**Task:** Raw planetary observation.
+- Instead of one monolith, these are 27 distinct modules located in `apis/sources/`.
+- They are completely agnostic to the news. They only care about raw math: How many airplanes are in Sector X? How many fires are in grid Y?
+- They pull data in parallel every 15 minutes, unaffected by social media sentiment.
 
-### 2. The Oracle Agent (Predictive Correlator)
-**Task:** Finding the hidden ripples.
-- Consumes the clean data from the Synthesizer.
-- Uses advanced context windows (e.g., Gemini 3.1 Pro or Claude 3) to cross-reference seemingly unrelated data (like marine chokepoint AIS data + regional natural disasters + social sentiment).
-- Calculates the "Gravity Score" (the probability of system failure in a specific domain).
-- Outputs early-warning intelligence reports and risk trajectories.
+### 2. The Claim Interceptor (Synthesizer)
+**Task:** Finding the viral narrative.
+- Watches the `tg` (Telegram) datastreams or an active dashboard input.
+- Isolates the single most urgent, rapidly spreading, high-anxiety claim (e.g., "Explosions are happening right now in Taiwan!").
+- Packages the claim and hands it downstream.
 
-### 3. The Antigravity Agent (Immunity Executor)
-**Task:** Taking action.
-- Listens for high Gravity Scores from The Oracle.
-- Determines the necessary evasive action (e.g., reroute supply chain logic, hedge an options portfolio, trigger an AWS auto-scaling event).
-- Formats payload JSON.
-- Executes the webhook and verifies receipt via external system confirmation.
+### 3. Veritas (The Reality Engine / Truth Oracle)
+**Task:** Fact-checking the claim mathematically.
+- Exists in `lib/ai/veritas.mjs`.
+- Receives the viral claim from the Interceptor.
+- Looks exclusively at the data provided by the 27 Sensor Agents.
+- Refuses to use pre-trained internet knowledge. 
+- Calculates the "Reality Score" (the probability that the claim matches the physical data) and writes a human-readable "Truth Proof" explaining why the deepfake is false or the news is true.
 
-### 4. The Lazarus Agent (Self-Healing Overseer)
-**Task:** System survival.
-- A lightweight, distinct loop that constantly pulses the status of Aetheris's own endpoints, memory usage, and API keys.
-- If it detects that The Oracle agent is hanging due to API rate limits, it hot-swaps the LLM provider or restarts the node without a system-wide reboot. 
-
-## Implementation Notes
-These agents will be implemented in the `lib/ai/` directory as distinct modular Javascript components that interact via an internal event bus, ensuring robust and asynchronous operations.
+### 4. The Publisher (Webhook Executor)
+**Task:** Defeating the propaganda in real-time.
+- Exists in `lib/alerts/webhook.mjs`.
+- If Veritas determines a high-confidence proof, the Publisher triggers safe POST requests.
+- It can be hooked into a decentralized blockchain, an AWS Lambda function, or an automated Twitter bot to fight the disinformation algorithmically.

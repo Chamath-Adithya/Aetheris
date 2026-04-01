@@ -39,7 +39,7 @@ try {
 
 // Step 4: Check each local module
 const modules = [
-  ['./aetheris.config.mjs', 'config'],
+  ['./veritas.config.mjs', 'config'],
   ['./lib/llm/index.mjs', 'LLM Provider Factory'],
   ['./lib/delta/engine.mjs', 'delta engine'],
   ['./lib/delta/memory.mjs', 'memory manager'],

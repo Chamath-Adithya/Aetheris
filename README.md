@@ -1,8 +1,8 @@
 <div align="center">
 
-# Aetheris: The Antigravity Agent
+# Veritas: The Reality Engine
 
-**Your autonomous intelligence and system immunity protocol.**
+**The autonomous, decentralized Truth Oracle built on 27 physical reality sensors.**
 
 ## [Forked from Crucix](https://github.com/calesthio/Crucix)
 
@@ -38,21 +38,20 @@
 
 </div>
 
-> **Aetheris: The Antigravity Agent** 
-> *Built for resilience. Designed in silence.*
+> **Veritas: The Reality Engine** 
+> *Truth verified through physical data. Not consensus.*
 
-Aetheris is an advanced, specialized fork of the Crucix intelligence dashboard. We are transitioning the project from a passive data observation tool into an active, predictive intelligence and system immunity engine.
+Veritas is an advanced Reality Engine that leverages physical, open-source planetary data to autonomously fact-check viral claims, debunking deepfakes and propaganda with objective "Truth Proofs."
 
-**The Antigravity Protocol:** Instead of merely alerting users that a crisis has occurred, Aetheris uses AI to correlate global data streams in real-time from 27 OSINT sources to predict ripple effects before they happen, and execute automated preventative measures (webhook triggers, portfolio safeguards, supply chain rerouting).
+**The Truth Protocol:** In an era of AI hallucination, Veritas intercepts viral narratives and uses 27 real-time OSINT APIs as unfalsifiable physical sensors (space recon, thermal anomalies, commercial flight deviations, radio jamming, cyber outages) to mathematically verify reality.
 
 ## The Roadmap
 
-- **AI Analysis Node:** An active layer between raw APIs and notification engines for predictive correlation.
-- **Predictive Risk Dashboard:** Upgraded UI displaying real-time "Gravity Scores".
-- **Webhook Triggers:** Expanding simple alerts into automated API actions against external systems (AWS, ERPs).
-- **Self-Healing (Project Lazarus):** Core state loops preventing crash cascades.
+- **Claim Engine (AI Node):** Replaces static dashboards with an interactive claim-verification agent.
+- **Reality Scores:** Outputs 0-100% confidence scores based on physical data cross-referencing.
+- **Decentralized Truth Proofs:** Automatically generates mathematical proofs for verified/debunked claims to publish to public ledgers or social feeds.
 
-For full details on the Aetheris vision, see the `Temp-Docs/` folder.
+For full details on the Veritas vision, see the `Temp-Docs/` folder.
 
 **Original Engine:** No cloud. No telemetry. No subscriptions. Just `node server.mjs` and you're running.
 
@@ -286,7 +285,7 @@ Crucix still works with zero API keys. 18+ sources require no authentication at 
 ```
 crucix/
 ├── server.mjs                 # Express dev server (SSE, auto-refresh, LLM, bot commands)
-├── aetheris.config.mjs        # Configuration with env var overrides + delta thresholds
+├── veritas.config.mjs         # Configuration with env var overrides + delta thresholds
 ├── diag.mjs                   # Diagnostic script — run if server fails to start
 ├── .env.example               # All documented env vars
 ├── package.json               # Runtime: express | Optional: discord.js
@@ -436,7 +435,7 @@ All settings are in `.env` with sensible defaults:
 | `DISCORD_GUILD_ID` | — | Server ID (instant slash command registration) |
 | `DISCORD_WEBHOOK_URL` | — | Webhook URL (alert-only fallback, no bot needed) |
 
-Delta engine thresholds (how sensitive the system is to changes between sweeps) can be customized in `aetheris.config.mjs` under the `delta.thresholds` section. The defaults are tuned to filter out noise while catching meaningful moves.
+Delta engine thresholds (how sensitive the system is to changes between sweeps) can be customized in `veritas.config.mjs` under the `delta.thresholds` section. The defaults are tuned to filter out noise while catching meaningful moves.
 
 ---
 

@@ -1,7 +1,7 @@
 {
-  "name": "aetheris",
+  "name": "veritas",
   "version": "1.0.0",
-  "description": "Aetheris: The Antigravity Agent - Autonomous predictive intelligence and system immunity protocol.",
+  "description": "Veritas: The Reality Engine - Autonomous truth oracle and decentralized fact-checking engine powered by 27 OSINT APIs.",
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
@@ -18,11 +18,11 @@
     "osint",
     "intelligence",
     "dashboard",
-    "antigravity",
-    "predictive",
-    "immunity"
+    "veritas",
+    "fact-check",
+    "oracle"
   ],
-  "author": "Aetheris",
+  "author": "Veritas",
   "license": "AGPL-3.0-only",
   "engines": {
     "node": ">=22",

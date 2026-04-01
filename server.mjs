@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
-import config from './aetheris.config.mjs';
+import config from './veritas.config.mjs';
 import { getLocale, currentLanguage, getSupportedLocales } from './lib/i18n.mjs';
 import { fullBriefing } from './apis/briefing.mjs';
 import { synthesize, generateIdeas } from './dashboard/inject.mjs';
@@ -16,7 +16,7 @@ import { createLLMProvider } from './lib/llm/index.mjs';
 import { generateLLMIdeas } from './lib/llm/ideas.mjs';
 import { TelegramAlerter } from './lib/alerts/telegram.mjs';
 import { DiscordAlerter } from './lib/alerts/discord.mjs';
-import { generateGravityReport } from './lib/ai/oracle.mjs';
+import { evaluateReality } from './lib/ai/veritas.mjs';
 import { WebhookExecutor } from './lib/alerts/webhook.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -365,24 +365,26 @@ async function runSweepCycle() {
       synthesized.ideasSource = 'disabled';
     }
 
-    // 5.5. AI Analysis Node -> Gravity Report
+    // 5.5. AI Analysis Node -> Veritas Truth Engine
     if (llmProvider?.isConfigured) {
       try {
-        console.log('[Antigravity] The Oracle is computing Systemic Gravity Score...');
-        const gravityReport = await generateGravityReport(llmProvider, synthesized, delta);
-        if (gravityReport) {
-          synthesized.gravityScore = gravityReport.gravityScore;
-          synthesized.gravityRationale = gravityReport.rationale || '';
-          synthesized.criticalSectors = gravityReport.criticalSectors || [];
-          synthesized.evasiveActions = gravityReport.evasiveActions || [];
-          console.log(`[Antigravity] Gravity Score: ${gravityReport.gravityScore}/100`);
+        console.log('[Veritas] Generating Truth Proof for most urgent viral claim...');
+        const realityReport = await evaluateReality(llmProvider, synthesized, delta);
+        if (realityReport) {
+          synthesized.realityReport = realityReport; 
+          console.log(`[Veritas] Reality Score: ${realityReport.realityScore}/100 [VERDICT: ${realityReport.verdict}]`);
 
-          if (gravityReport.evasiveActions.length > 0 && webhookExecutor.isConfigured) {
-            await webhookExecutor.executeActions(gravityReport);
+          if (webhookExecutor.isConfigured && realityReport.verdict !== 'UNVERIFIABLE') {
+            await webhookExecutor.executeActions({
+              gravityScore: realityReport.realityScore || 50,
+              rationale: realityReport.truthProof,
+              criticalSectors: realityReport.supportingEvidence || [],
+              evasiveActions: [{ type: 'publish_truth_proof', verdict: realityReport.verdict, proof: realityReport.truthProof }]
+            });
           }
         }
-      } catch (oracleErr) {
-        console.error('[Oracle] Gravity generation failed:', oracleErr.message);
+      } catch (veritasErr) {
+        console.error('[Veritas] Reality evaluation failed:', veritasErr.message);
       }
     }
 
