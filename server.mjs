@@ -10,10 +10,9 @@ import { exec } from 'child_process';
 import config from './veritas.config.mjs';
 import { getLocale, currentLanguage, getSupportedLocales } from './lib/i18n.mjs';
 import { fullBriefing } from './apis/briefing.mjs';
-import { synthesize, generateIdeas } from './dashboard/inject.mjs';
+import { synthesize } from './dashboard/inject.mjs';
 import { MemoryManager } from './lib/delta/index.mjs';
 import { createLLMProvider } from './lib/llm/index.mjs';
-import { generateLLMIdeas } from './lib/llm/ideas.mjs';
 import { TelegramAlerter } from './lib/alerts/telegram.mjs';
 import { DiscordAlerter } from './lib/alerts/discord.mjs';
 import { evaluateReality } from './lib/ai/veritas.mjs';
@@ -341,29 +340,7 @@ async function runSweepCycle() {
     const delta = memory.addRun(synthesized);
     synthesized.delta = delta;
 
-    // 5. LLM-powered trade ideas (LLM-only feature) — isolated so failures don't kill sweep
-    if (llmProvider?.isConfigured) {
-      try {
-        console.log('[Crucix] Generating LLM trade ideas...');
-        const previousIdeas = memory.getLastRun()?.ideas || [];
-        const llmIdeas = await generateLLMIdeas(llmProvider, synthesized, delta, previousIdeas);
-        if (llmIdeas) {
-          synthesized.ideas = llmIdeas;
-          synthesized.ideasSource = 'llm';
-          console.log(`[Crucix] LLM generated ${llmIdeas.length} ideas`);
-        } else {
-          synthesized.ideas = [];
-          synthesized.ideasSource = 'llm-failed';
-        }
-      } catch (llmErr) {
-        console.error('[Crucix] LLM ideas failed (non-fatal):', llmErr.message);
-        synthesized.ideas = [];
-        synthesized.ideasSource = 'llm-failed';
-      }
-    } else {
-      synthesized.ideas = [];
-      synthesized.ideasSource = 'disabled';
-    }
+    // Removed legacy trade ideas generator
 
     // 5.5. AI Analysis Node -> Veritas Truth Engine
     if (llmProvider?.isConfigured) {
@@ -411,7 +388,7 @@ async function runSweepCycle() {
     broadcast({ type: 'update', data: currentData });
 
     console.log(`[Crucix] Sweep complete — ${currentData.meta.sourcesOk}/${currentData.meta.sourcesQueried} sources OK`);
-    console.log(`[Crucix] ${currentData.ideas.length} ideas (${synthesized.ideasSource}) | ${currentData.news.length} news | ${currentData.newsFeed.length} feed items`);
+    console.log(`[Veritas] Reality Report generated: ${synthesized.realityReport ? 'YES' : 'NO'} | ${currentData.news.length} news | ${currentData.newsFeed.length} feed items`);
     if (delta?.summary) console.log(`[Crucix] Delta: ${delta.summary.totalChanges} changes, ${delta.summary.criticalChanges} critical, direction: ${delta.summary.direction}`);
     console.log(`[Crucix] Next sweep at ${new Date(Date.now() + config.refreshIntervalMinutes * 60000).toLocaleTimeString()}`);
 
