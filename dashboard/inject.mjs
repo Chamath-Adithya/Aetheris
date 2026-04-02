@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Crucix Dashboard Data Synthesizer
+// Veritas Dashboard Data Synthesizer
 // Reads runs/latest.json, fetches RSS news, generates signal-based ideas,
 // and injects everything into dashboard/public/jarvis.html
 //

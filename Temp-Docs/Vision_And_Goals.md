@@ -1,7 +1,7 @@
 # Veritas: The Reality Engine - Vision and Goals
 
 ## 🌍 Project Origin
-Veritas is a radical, highly-specialized pivot of the Crucix/Aetheris engine. While earlier architectures focused on gathering open-source intelligence (OSINT) to predict system failures (the Antigravity Protocol), Veritas pivots this entire computational engine toward a single, critical mission: verifiable truth.
+Veritas is a radical, highly-specialized pivot of the Veritas/Aetheris engine. While earlier architectures focused on gathering open-source intelligence (OSINT) to predict system failures (the Antigravity Protocol), Veritas pivots this entire computational engine toward a single, critical mission: verifiable truth.
 
 ## 💡 The Innovative Idea: The Reality Engine
 In the era of AI-generated deepfakes, hallucinated news, and rapid-fire geopolitical propaganda, the concept of objective reality is fracturing. People no longer know what is true, and fact-checkers rely on human consensus that is often biased or too slow.

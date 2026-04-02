@@ -33,7 +33,7 @@ test('OpenRouterProvider Unit Tests', async (t) => {
       assert.equal(url, 'https://openrouter.ai/api/v1/chat/completions');
       assert.equal(options.headers['Authorization'], 'Bearer test-key');
       assert.equal(options.headers['X-Title'], 'Veritas');
-      assert.equal(options.headers['HTTP-Referer'], 'https://github.com/calesthio/Veritas');
+      assert.equal(options.headers['HTTP-Referer'], 'https://github.com/calesthio/Crucix');
 
       const body = JSON.parse(options.body);
       assert.equal(body.model, 'test-model');

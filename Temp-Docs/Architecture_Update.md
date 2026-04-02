@@ -1,6 +1,6 @@
-# Transforming Architecture: From Crucix to Veritas
+# Transforming Architecture: From Veritas to Veritas
 
-To transition from the base Crucix repository into **Veritas: The Reality Engine**, several core architectural components have been wholly repurposed.
+To transition from the base Veritas repository into **Veritas: The Reality Engine**, several core architectural components have been wholly repurposed.
 
 ## 1. Injecting the Claim Engine (AI Analysis Node)
 *Current Flow:* `apis/sources/` -> Notification Engine -> Dashboard

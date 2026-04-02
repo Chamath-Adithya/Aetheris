@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Crucix Intelligence Engine — Dev Server
+// Veritas Intelligence Engine — Dev Server
 // Serves the Jarvis dashboard, runs sweep cycle, pushes live updates via SSE
 
 import express from 'express';
@@ -64,7 +64,7 @@ if (telegramAlerter.isConfigured) {
       : 'pending';
 
     return [
-      `🖥️ *CRUCIX STATUS*`,
+      `🖥️ *VERITAS STATUS*`,
       ``,
       `Uptime: ${h}h ${m}m`,
       `Last sweep: ${lastSweepTime ? new Date(lastSweepTime).toLocaleTimeString() + ' UTC' : 'never'}`,
@@ -94,7 +94,7 @@ if (telegramAlerter.isConfigured) {
     const ideas = (currentData.ideas || []).slice(0, 3);
 
     const sections = [
-      `📋 *CRUCIX BRIEF*`,
+      `📋 *VERITAS BRIEF*`,
       `_${new Date().toISOString().replace('T', ' ').substring(0, 19)} UTC_`,
       ``,
     ];
@@ -138,7 +138,7 @@ if (telegramAlerter.isConfigured) {
   });
 
   telegramAlerter.onCommand('/portfolio', async () => {
-    return '📊 Portfolio integration requires Alpaca MCP connection.\nUse the Crucix dashboard or Claude agent for portfolio queries.';
+    return '📊 Portfolio integration requires Alpaca MCP connection.\nUse the Veritas dashboard or Claude agent for portfolio queries.';
   });
 
   // Start polling for bot commands
@@ -163,7 +163,7 @@ if (discordAlerter.isConfigured) {
       : 'pending';
 
     return [
-      `**🖥️ CRUCIX STATUS**\n`,
+      `**🖥️ VERITAS STATUS**\n`,
       `Uptime: ${h}h ${m}m`,
       `Last sweep: ${lastSweepTime ? new Date(lastSweepTime).toLocaleTimeString() + ' UTC' : 'never'}`,
       `Next sweep: ${nextSweep} UTC`,
@@ -190,7 +190,7 @@ if (discordAlerter.isConfigured) {
     const delta = memory.getLastDelta();
     const ideas = (currentData.ideas || []).slice(0, 3);
 
-    const sections = [`**📋 CRUCIX BRIEF**\n_${new Date().toISOString().replace('T', ' ').substring(0, 19)} UTC_\n`];
+    const sections = [`**📋 VERITAS BRIEF**\n_${new Date().toISOString().replace('T', ' ').substring(0, 19)} UTC_\n`];
 
     if (delta?.summary) {
       const dirEmoji = { 'risk-off': '📉', 'risk-on': '📈', 'mixed': '↔️' }[delta.summary.direction] || '↔️';
@@ -225,7 +225,7 @@ if (discordAlerter.isConfigured) {
   });
 
   discordAlerter.onCommand('portfolio', async () => {
-    return '📊 Portfolio integration requires Alpaca MCP connection.\nUse the Crucix dashboard or Claude agent for portfolio queries.';
+    return '📊 Portfolio integration requires Alpaca MCP connection.\nUse the Veritas dashboard or Claude agent for portfolio queries.';
   });
 
   // Start the Discord bot (non-blocking — connection happens async)
@@ -248,7 +248,7 @@ app.get('/', (req, res) => {
     
     // Inject locale data into the HTML
     const locale = getLocale();
-    const localeScript = `<script>window.__CRUCIX_LOCALE__ = ${JSON.stringify(locale).replace(/<\/script>/gi, '<\\/script>')};</script>`;
+    const localeScript = `<script>window.__VERITAS_LOCALE__ = ${JSON.stringify(locale).replace(/<\/script>/gi, '<\\/script>')};</script>`;
     html = html.replace('</head>', `${localeScript}\n</head>`);
     
     res.type('html').send(html);
@@ -406,7 +406,7 @@ async function start() {
 
   console.log(`
   ╔══════════════════════════════════════════════╗
-  ║           CRUCIX INTELLIGENCE ENGINE         ║
+  ║           VERITAS INTELLIGENCE ENGINE         ║
   ║          Local Palantir · 26 Sources         ║
   ╠══════════════════════════════════════════════╣
   ║  Dashboard:  http://localhost:${port}${' '.repeat(14 - String(port).length)}║
@@ -423,7 +423,7 @@ async function start() {
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
       console.error(`\n[Veritas] FATAL: Port ${port} is already in use!`);
-      console.error(`[Veritas] A previous Crucix instance may still be running.`);
+      console.error(`[Veritas] A previous Veritas instance may still be running.`);
       console.error(`[Veritas] Fix:  taskkill /F /IM node.exe   (Windows)`);
       console.error(`[Veritas]       kill $(lsof -ti:${port})   (macOS/Linux)`);
       console.error(`[Veritas] Or change PORT in .env\n`);
