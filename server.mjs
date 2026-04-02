@@ -45,9 +45,9 @@ const telegramAlerter = new TelegramAlerter(config.telegram);
 const discordAlerter = new DiscordAlerter(config.discord || {});
 const webhookExecutor = new WebhookExecutor(config.webhooks || {});
 
-if (llmProvider) console.log(`[Crucix] LLM enabled: ${llmProvider.name} (${llmProvider.model})`);
+if (llmProvider) console.log(`[Veritas] LLM enabled: ${llmProvider.name} (${llmProvider.model})`);
 if (telegramAlerter.isConfigured) {
-  console.log('[Crucix] Telegram alerts enabled');
+  console.log('[Veritas] Telegram alerts enabled');
 
   // ─── Two-Way Bot Commands ───────────────────────────────────────────────
 
@@ -80,7 +80,7 @@ if (telegramAlerter.isConfigured) {
   telegramAlerter.onCommand('/sweep', async () => {
     if (sweepInProgress) return '🔄 Sweep already in progress. Please wait.';
     // Fire and forget — don't block the bot response
-    runSweepCycle().catch(err => console.error('[Crucix] Manual sweep failed:', err.message));
+    runSweepCycle().catch(err => console.error('[Veritas] Manual sweep failed:', err.message));
     return '🚀 Manual sweep triggered. You\'ll receive alerts if anything significant is detected.';
   });
 
@@ -147,7 +147,7 @@ if (telegramAlerter.isConfigured) {
 
 // === Discord Bot ===
 if (discordAlerter.isConfigured) {
-  console.log('[Crucix] Discord bot enabled');
+  console.log('[Veritas] Discord bot enabled');
 
   // Reuse the same command handlers as Telegram (DRY)
   discordAlerter.onCommand('status', async () => {
@@ -177,7 +177,7 @@ if (discordAlerter.isConfigured) {
 
   discordAlerter.onCommand('sweep', async () => {
     if (sweepInProgress) return '🔄 Sweep already in progress. Please wait.';
-    runSweepCycle().catch(err => console.error('[Crucix] Manual sweep failed:', err.message));
+    runSweepCycle().catch(err => console.error('[Veritas] Manual sweep failed:', err.message));
     return '🚀 Manual sweep triggered. You\'ll receive alerts if anything significant is detected.';
   });
 
@@ -230,7 +230,7 @@ if (discordAlerter.isConfigured) {
 
   // Start the Discord bot (non-blocking — connection happens async)
   discordAlerter.start().catch(err => {
-    console.error('[Crucix] Discord bot startup failed (non-fatal):', err.message);
+    console.error('[Veritas] Discord bot startup failed (non-fatal):', err.message);
   });
 }
 
@@ -313,7 +313,7 @@ function broadcast(data) {
 // === Sweep Cycle ===
 async function runSweepCycle() {
   if (sweepInProgress) {
-    console.log('[Crucix] Sweep already in progress, skipping');
+    console.log('[Veritas] Sweep already in progress, skipping');
     return;
   }
 
@@ -321,7 +321,7 @@ async function runSweepCycle() {
   sweepStartedAt = new Date().toISOString();
   broadcast({ type: 'sweep_start', timestamp: sweepStartedAt });
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`[Crucix] Starting sweep at ${new Date().toLocaleTimeString()}`);
+  console.log(`[Veritas] Starting sweep at ${new Date().toLocaleTimeString()}`);
   console.log(`${'='.repeat(60)}`);
 
   try {
@@ -333,7 +333,7 @@ async function runSweepCycle() {
     lastSweepTime = new Date().toISOString();
 
     // 3. Synthesize into dashboard format
-    console.log('[Crucix] Synthesizing dashboard data...');
+    console.log('[Veritas] Synthesizing dashboard data...');
     const synthesized = await synthesize(rawData);
 
     // 4. Delta computation + memory
@@ -369,12 +369,12 @@ async function runSweepCycle() {
     if (delta?.summary?.totalChanges > 0) {
       if (telegramAlerter.isConfigured) {
         telegramAlerter.evaluateAndAlert(llmProvider, delta, memory).catch(err => {
-          console.error('[Crucix] Telegram alert error:', err.message);
+          console.error('[Veritas] Telegram alert error:', err.message);
         });
       }
       if (discordAlerter.isConfigured) {
         discordAlerter.evaluateAndAlert(llmProvider, delta, memory).catch(err => {
-          console.error('[Crucix] Discord alert error:', err.message);
+          console.error('[Veritas] Discord alert error:', err.message);
         });
       }
     }
@@ -387,13 +387,13 @@ async function runSweepCycle() {
     // 6. Push to all connected browsers
     broadcast({ type: 'update', data: currentData });
 
-    console.log(`[Crucix] Sweep complete — ${currentData.meta.sourcesOk}/${currentData.meta.sourcesQueried} sources OK`);
+    console.log(`[Veritas] Sweep complete — ${currentData.meta.sourcesOk}/${currentData.meta.sourcesQueried} sources OK`);
     console.log(`[Veritas] Reality Report generated: ${synthesized.realityReport ? 'YES' : 'NO'} | ${currentData.news.length} news | ${currentData.newsFeed.length} feed items`);
-    if (delta?.summary) console.log(`[Crucix] Delta: ${delta.summary.totalChanges} changes, ${delta.summary.criticalChanges} critical, direction: ${delta.summary.direction}`);
-    console.log(`[Crucix] Next sweep at ${new Date(Date.now() + config.refreshIntervalMinutes * 60000).toLocaleTimeString()}`);
+    if (delta?.summary) console.log(`[Veritas] Delta: ${delta.summary.totalChanges} changes, ${delta.summary.criticalChanges} critical, direction: ${delta.summary.direction}`);
+    console.log(`[Veritas] Next sweep at ${new Date(Date.now() + config.refreshIntervalMinutes * 60000).toLocaleTimeString()}`);
 
   } catch (err) {
-    console.error('[Crucix] Sweep failed:', err.message);
+    console.error('[Veritas] Sweep failed:', err.message);
     broadcast({ type: 'sweep_error', error: err.message });
   } finally {
     sweepInProgress = false;
@@ -422,19 +422,19 @@ async function start() {
 
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      console.error(`\n[Crucix] FATAL: Port ${port} is already in use!`);
-      console.error(`[Crucix] A previous Crucix instance may still be running.`);
-      console.error(`[Crucix] Fix:  taskkill /F /IM node.exe   (Windows)`);
-      console.error(`[Crucix]       kill $(lsof -ti:${port})   (macOS/Linux)`);
-      console.error(`[Crucix] Or change PORT in .env\n`);
+      console.error(`\n[Veritas] FATAL: Port ${port} is already in use!`);
+      console.error(`[Veritas] A previous Crucix instance may still be running.`);
+      console.error(`[Veritas] Fix:  taskkill /F /IM node.exe   (Windows)`);
+      console.error(`[Veritas]       kill $(lsof -ti:${port})   (macOS/Linux)`);
+      console.error(`[Veritas] Or change PORT in .env\n`);
     } else {
-      console.error(`[Crucix] Server error:`, err.stack || err.message);
+      console.error(`[Veritas] Server error:`, err.stack || err.message);
     }
     process.exit(1);
   });
 
   server.on('listening', async () => {
-    console.log(`[Crucix] Server running on http://localhost:${port}`);
+    console.log(`[Veritas] Server running on http://localhost:${port}`);
 
     // Auto-open browser
     // NOTE: On Windows, `start` in PowerShell is an alias for Start-Service, not cmd's start.
@@ -442,7 +442,7 @@ async function start() {
     const openCmd = process.platform === 'win32' ? 'cmd /c start ""' :
                     process.platform === 'darwin' ? 'open' : 'xdg-open';
     exec(`${openCmd} "http://localhost:${port}"`, (err) => {
-      if (err) console.log('[Crucix] Could not auto-open browser:', err.message);
+      if (err) console.log('[Veritas] Could not auto-open browser:', err.message);
     });
 
     // Try to load existing data first for instant display (await so dashboard shows immediately)
@@ -450,16 +450,16 @@ async function start() {
       const existing = JSON.parse(readFileSync(join(RUNS_DIR, 'latest.json'), 'utf8'));
       const data = await synthesize(existing);
       currentData = data;
-      console.log('[Crucix] Loaded existing data from runs/latest.json — dashboard ready instantly');
+      console.log('[Veritas] Loaded existing data from runs/latest.json — dashboard ready instantly');
       broadcast({ type: 'update', data: currentData });
     } catch {
-      console.log('[Crucix] No existing data found — first sweep required');
+      console.log('[Veritas] No existing data found — first sweep required');
     }
 
     // Run first sweep (refreshes data in background)
-    console.log('[Crucix] Running initial sweep...');
+    console.log('[Veritas] Running initial sweep...');
     runSweepCycle().catch(err => {
-      console.error('[Crucix] Initial sweep failed:', err.message || err);
+      console.error('[Veritas] Initial sweep failed:', err.message || err);
     });
 
     // Schedule recurring sweeps
@@ -469,13 +469,13 @@ async function start() {
 
 // Graceful error handling — log full stack traces for diagnosis
 process.on('unhandledRejection', (err) => {
-  console.error('[Crucix] Unhandled rejection:', err?.stack || err?.message || err);
+  console.error('[Veritas] Unhandled rejection:', err?.stack || err?.message || err);
 });
 process.on('uncaughtException', (err) => {
-  console.error('[Crucix] Uncaught exception:', err?.stack || err?.message || err);
+  console.error('[Veritas] Uncaught exception:', err?.stack || err?.message || err);
 });
 
 start().catch(err => {
-  console.error('[Crucix] FATAL — Server failed to start:', err?.stack || err?.message || err);
+  console.error('[Veritas] FATAL — Server failed to start:', err?.stack || err?.message || err);
   process.exit(1);
 });

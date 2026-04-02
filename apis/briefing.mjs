@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Crucix Master Orchestrator — runs all intelligence sources in parallel
+// Veritas Master Orchestrator — runs all intelligence sources in parallel
 // Outputs structured JSON for Claude to synthesize into actionable briefing
 
 import './utils/env.mjs'; // Load API keys from .env
@@ -67,7 +67,7 @@ export async function runSource(name, fn, ...args) {
 }
 
 export async function fullBriefing() {
-  console.error('[Crucix] Starting intelligence sweep — 29 sources...');
+  console.error('[Veritas] Starting intelligence sweep — 29 sources...');
   const start = Date.now();
 
   const allPromises = [
@@ -121,7 +121,7 @@ export async function fullBriefing() {
   const totalMs = Date.now() - start;
 
   const output = {
-    crucix: {
+    veritas: {
       version: '2.0.0',
       timestamp: new Date().toISOString(),
       totalDurationMs: totalMs,
@@ -138,7 +138,7 @@ export async function fullBriefing() {
     ),
   };
 
-  console.error(`[Crucix] Sweep complete in ${totalMs}ms — ${output.crucix.sourcesOk}/${sources.length} sources returned data`);
+  console.error(`[Veritas] Sweep complete in ${totalMs}ms — ${output.veritas.sourcesOk}/${sources.length} sources returned data`);
   return output;
 }
 
